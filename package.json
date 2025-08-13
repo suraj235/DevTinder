@@ -4,6 +4,8 @@
   "description": "This is a tinder app for developers",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -13,5 +15,9 @@
     "mongodb"
   ],
   "author": "Suraj Sanwal",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
 }
