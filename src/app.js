@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const {adminAuth} = require('./middlewares/auth');
 
 // replaced app.use() with app.get() for specific routes.
 // app.use() is for all routes.
@@ -23,15 +24,7 @@ app.get("/suru", (req, res, next) => {
 });
 
 // Auth  Middleware for All Requests
-app.use('/admin', (req, res, next) => {
-  console.log("Admin Middleware is running");
-  const token = 'suru'; // Simulated token for authentication
-  if (token !== 'suru') {
-    res.status(403).send('Forbidden: You do not have permission to access this resource.');
-  } else {
-    next();
-  }
-});
+app.use('/admin', adminAuth);
 
 app.get('/admin/getAllUsers', (req, res) => {
   res.send('Hello from Admin Get All Users!');
