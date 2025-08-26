@@ -6,6 +6,7 @@ const User = require('./models/user');
 // Middleware to parse JSON bodies
 app.use(express.json());
 
+// Signup route
 app.post('/signup', async (req, res) => {
   const user = new User({
     username: req.body.firstName + Math.random().toString(36).substring(2, 5),
@@ -26,6 +27,61 @@ app.post('/signup', async (req, res) => {
     res.status(400).send('Error creating user: ' + error.message);
   }
 });
+
+// Get Users route
+app.get('/user', async (req, res) => {
+  console.log(req.body.email);
+  try {
+    const users = await User.find({ email: req.body.email });
+    if(users.length === 0) {
+      return res.status(404).send('No users found with the provided email');
+    } else {
+      res.status(200).send(users);
+    }
+  } catch (error) {
+    res.status(500).send('Error fetching users: ' + error.message);
+  }
+});
+
+// Get Feed
+app.get('/feed', async (req, res) => {
+  try {
+    const users = await User.find({});
+    if(users.length === 0) {
+      return res.status(404).send('No users found');
+    } else {
+      res.status(200).send(users);
+    }
+  } catch (error) {
+    res.status(500).send('Error fetching feed: ' + error.message);
+  }
+});
+
+// Update User route
+app.patch('/user', async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+  try {
+    const user =  await User.findByIdAndUpdate(userId, data, { runValidators: true, returnDocument: 'after' });
+    res.status(200).send("User updated successfully!");
+  } catch (error) {
+    return res.status(400).send('Error updating user: ' + error.message);
+  }
+});
+
+// Delete User route
+app.delete('/user', async(req, res) => {
+  const userId = req.body.userId;
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    if(!user) {
+      return res.status(404).send('User not found');
+    }
+    res.status(200).send("User deleted successfully!");
+  } catch (error) {
+    return res.status(400).send('Error deleting user: ' + error.message);
+  }
+})
 
 connectDB().then(() => {
   console.log('Database connected successfully');
