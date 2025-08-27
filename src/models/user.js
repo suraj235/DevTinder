@@ -41,19 +41,17 @@ const userSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      required: true,
       min: [18, "You must be at least 18 years old."],
     },
     gender: {
       type: String,
-      required: true,
       enum: {
         values: ["Male", "Female", "Other"],
         message: "{VALUE} is not supported",
       },
     },
-    location: { type: String, required: true },
-    bio: { type: String, required: true, MaxLength: [500, "Bio cannot exceed 500 characters."] },
+    location: { type: String },
+    bio: { type: String, MaxLength: [500, "Bio cannot exceed 500 characters."] },
     profilePicture: {
       type: String,
       required: true,
