@@ -31,6 +31,27 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// Login route
+app.post("/login", async(req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    // console.log(user)
+    if(!user) {
+      return res.status(404).send("Invalid Credentials!");
+    }
+
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if(!isPasswordMatch) {
+      return res.status(404).send("Invalid Credentials!");
+    }
+
+    res.status(200).send("Login Successful!");
+  } catch (error) {
+    res.status(400).send("Error logging in: " + error.message);
+  }
+})
+
 // Get Users route
 app.get("/user", async (req, res) => {
   console.log(req.body.email);
