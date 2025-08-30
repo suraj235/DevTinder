@@ -4,9 +4,11 @@ const connectDB = require("./config/database");
 const User = require("./models/user");
 const { validateSingnupInput } = require("./helpers/validations");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
-// Middleware to parse JSON bodies
 app.use(express.json());
+app.use(cookieParser());
 
 // Signup route
 app.post("/signup", async (req, res) => {
@@ -32,25 +34,50 @@ app.post("/signup", async (req, res) => {
 });
 
 // Login route
-app.post("/login", async(req, res) => {
+app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    // console.log(user)
-    if(!user) {
+    if (!user) {
       return res.status(404).send("Invalid Credentials!");
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if(!isPasswordMatch) {
+    if (!isPasswordMatch) {
       return res.status(404).send("Invalid Credentials!");
     }
+
+    // Setting up JWT token
+    const token = await jwt.sign( {_id: user._id}, "DevTinder@2025##", {expiresIn: '1d'} );
+    res.cookie("token", token);
 
     res.status(200).send("Login Successful!");
   } catch (error) {
     res.status(400).send("Error logging in: " + error.message);
   }
-})
+});
+
+// Profile route
+app.post("/profile", async (req, res) => {
+  try {
+    const { token } = req.cookies;
+    if(!token) {
+      throw new Error("Unauthorized! Please login to access profile.");
+    }
+
+    const decodedToken = await jwt.verify(token, 'DevTinder@2025##');
+    const { _id } = decodedToken;
+    const user = await User.findById(_id);
+
+    if(!user) {
+      throw new Error("User not found.");
+    }
+
+    res.send(user);
+  } catch (error) {
+    res.status(400).send("Error fetching profile: " + error.message);
+  }
+});
 
 // Get Users route
 app.get("/user", async (req, res) => {
