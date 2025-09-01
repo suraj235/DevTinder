@@ -49,7 +49,7 @@ app.post("/login", async (req, res) => {
     }
 
     // Setting up JWT token
-    const token = await jwt.sign( {_id: user._id}, "DevTinder@2025##", {expiresIn: '1d'} );
+    const token = await user.getJWT();
     res.cookie("token", token);
 
     res.status(200).send("Login Successful!");
