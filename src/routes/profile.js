@@ -6,8 +6,7 @@ const bcrypt = require("bcrypt");
 
 profileRouter.post("/view", userAuth, (req, res) => {
   try {
-    res.json({
-      status: 200,
+    res.status(200).json({
       message: "Profile fetched successfully",
       data: req.user,
     });
@@ -25,8 +24,7 @@ profileRouter.patch("/edit", userAuth, async (req, res) => {
     Object.keys(req.body).forEach((key) => (loggedInUser[key] = req.body[key]));
     await loggedInUser.save();
 
-    res.json({
-      status: 200,
+    res.status(200).json({
       message: "Profile updated successfully",
       data: loggedInUser,
     });
@@ -47,8 +45,7 @@ profileRouter.patch("/reset-password", userAuth, async (req, res) => {
     loggedInUser.password = newPasswordHash;
     await loggedInUser.save();
 
-    res.json({
-      status: 200,
+    res.status(200).json({
       message: "Password updated successfully",
       data: loggedInUser,
     });

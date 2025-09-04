@@ -11,8 +11,8 @@
 - PATCH /profile/password
 
 ## requestRouter
-- POST /request/send/interested/:user_id
-- POST /request/send/ignore/:user_id
+- POST /request/send/:status/:userId
+
 - POST /request/review/accepted/:request_id
 - POST /request/review/rejected/:request_id
 
@@ -21,4 +21,4 @@
 - GET /user/request/received
 - GET /user/feed
 
-Status: ignore, interested, accepted, rejected
+Status: ignored, interested, accepted, rejected
