@@ -12,9 +12,7 @@
 
 ## requestRouter
 - POST /request/send/:status/:userId
-
-- POST /request/review/accepted/:request_id
-- POST /request/review/rejected/:request_id
+- POST /request/review/:status/:request_id
 
 ## userRouter
 - GET /user/connections
